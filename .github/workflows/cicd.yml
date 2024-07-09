@@ -1,0 +1,28 @@
+name: Deploy Bidder Backend
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Login to dockerhub
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+      - name: Build image
+        run: docker build -t hunais/bidder-backend .
+      - name: Push to docker image
+        run: docker push hunais/bidder-backend:latest
+
+  deploy:
+    needs: build
+    runs-on: self-hosted
+    steps:
+      - name: Pulling image
+        run: docker pull hunais/bidder-backend:latest
+      - name: Run docker container
+        run: docker run -d -p 5000:5000 --name bidder-backend -e CLIENT_ORIGIN='${{ secrets.CLIENT_ORIGIN }}' EMAIL='${{ secrets.EMAIL }}' PASSWORD='${{ secrets.PASSWORD }}' JWT_SECRET='{{secrets.JWT_SECRET}}' MAIL_LINK='${{ secrets.MAIL_LINK }}' STRIPE_API_KEY='${{ SECRETS.STRIPE_API_KEY }}' MODE='${{ secrets.MODE }}' 
