@@ -1,5 +1,6 @@
 import Stripe from "stripe";
 import dotenv from "dotenv";
+import { ErrorResponse } from "../../../utils/errors";
 dotenv.config();
 
 const stripe = new Stripe(process.env.STRIPE_API_KEY as string);
@@ -20,7 +21,7 @@ export class StipeIneractor {
     } catch (error: any) {
       console.log(error);
 
-      throw new Error(error.message);
+      throw new ErrorResponse(error.message, error.status);
     }
   }
   async retreivePaymentIntent(paymentIntent: string): Promise<any> {
@@ -30,7 +31,7 @@ export class StipeIneractor {
       const data = await stripe.paymentIntents.retrieve(paymentIntent);
       return data;
     } catch (error: any) {
-      throw new Error(error.message);
+      throw new ErrorResponse(error.message, error.status);
     }
   }
 }

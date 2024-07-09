@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { IAuthService } from "../../application/interfaces/service/IAuthService";
 import { IAuctionInteractor } from "../../application/interfaces/auction/IAuctionInteractor";
+import { IRequestWithUser } from "../../application/types/types";
 
 export class AuctionController {
   private authService: IAuthService;
@@ -21,23 +22,9 @@ export class AuctionController {
     }
   }
 
-  async onGetAuction(req: Request, res: Response, next: NextFunction) {
+  async onAdminGetAllAuction(req: Request, res: Response, next: NextFunction) {
     try {
-      const token = req.headers.authorization?.split(" ")[1];
-
-      console.log(token);
-
-      if (!token) {
-        throw new Error("user not authorised");
-      }
-
-      const { _id, role } = this.authService.verifyToken(token);
-
-      if (role !== "auctioner" && role !== "admin") {
-        throw new Error("user not authorised");
-      }
-
-      const auctions = await this.interactor.getAuction(_id.toString());
+      const auctions = await this.interactor.adminGetAllAuctions();
       return res.status(200).json({ success: true, auctions });
     } catch (error) {
       console.log(error);
@@ -45,25 +32,28 @@ export class AuctionController {
     }
   }
 
-  async onAddAuction(req: Request, res: Response, next: NextFunction) {
+  async onGetAuction(req: IRequestWithUser, res: Response, next: NextFunction) {
     try {
-      const token = req.headers.authorization?.split(" ")[1];
+      const { id, role } = req.user!;
 
-      console.log(token);
+      // if (role !== "auctioner" && role !== "admin") {
+      //   throw new Error("user not authorised");
+      // }
 
-      if (!token) {
-        throw new Error("user not authorised");
-      }
+      const auctions = await this.interactor.getAuction(id);
+      return res.status(200).json({ success: true, auctions });
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  }
 
-      const { _id, role } = this.authService.verifyToken(token);
-
-      if (role !== "auctioner" && role !== "admin") {
-        throw new Error("user not authorised");
-      }
-
+  async onAddAuction(req: IRequestWithUser, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.user!;
       const body = req.body;
 
-      const auction = await this.interactor.addAuction(_id.toString(), body);
+      const auction = await this.interactor.addAuction(id, body);
 
       return res.status(200).json({
         success: true,
@@ -89,22 +79,18 @@ export class AuctionController {
     }
   }
 
-  async onEditAuction(req: Request, res: Response, next: NextFunction) {
+  async onEditAuction(
+    req: IRequestWithUser,
+    res: Response,
+    next: NextFunction
+  ) {
     try {
-      const token = req.headers.authorization?.split(" ")[1];
-      if (!token) {
-        throw new Error("user not authorised");
-      }
+      const { id } = req.user!;
 
-      const { _id, role } = this.authService.verifyToken(token);
-
-      if (role !== "auctioner" && role !== "admin") {
-        throw new Error("user not authorised");
-      }
-      const id = req.params.id;
+      const { auctionId } = req.params;
       const body = req.body;
-      
-      const auction = await this.interactor.editAuction(id, body);
+
+      const auction = await this.interactor.editAuction(id, auctionId, body);
 
       return res.status(200).json({
         success: true,
@@ -117,24 +103,23 @@ export class AuctionController {
     }
   }
 
-  async onAuctionStatus(req: Request, res: Response, next: NextFunction) {
+  async onAuctionStatus(
+    req: IRequestWithUser,
+    res: Response,
+    next: NextFunction
+  ) {
     try {
-      const token = req.headers.authorization?.split(" ")[1];
-      if (!token) {
-        throw new Error("user not authorised");
-      }
+      const { id } = req.user!;
 
-      const { _id, role } = this.authService.verifyToken(token);
-
-      if (role !== "auctioner" && role !== "admin") {
-        throw new Error("user not authorised");
-      }
-
-      const id = req.params.id;
+      const { auctionId } = req.params;
 
       const { status } = req.body;
 
-      const auction = await this.interactor.changeAuctionStatus(id, status);
+      const auction = await this.interactor.changeAuctionStatus(
+        id,
+        auctionId,
+        status
+      );
 
       return res.status(200).json({
         success: true,
@@ -147,23 +132,13 @@ export class AuctionController {
     }
   }
 
-  async onPlaceBid(req: Request, res: Response, next: NextFunction) {
+  async onPlaceBid(req: IRequestWithUser, res: Response, next: NextFunction) {
     try {
-      const token = req.headers.authorization?.split(" ")[1];
-
-      if (!token) {
-        throw new Error("user not authorised");
-      }
-
-      const { _id } = this.authService.verifyToken(token);
+      const { id } = req.user!;
 
       const { bidAmount, auctionId } = req.body;
 
-      const bid = await this.interactor.placeBid(
-        bidAmount,
-        auctionId,
-        _id.toString()
-      );
+      const bid = await this.interactor.placeBid(bidAmount, auctionId, id);
 
       return res.status(200).json({ success: true });
     } catch (error) {
@@ -183,18 +158,15 @@ export class AuctionController {
     }
   }
 
-  async onGetBiddingHistory(req: Request, res: Response, next: NextFunction) {
+  async onGetBiddingHistory(
+    req: IRequestWithUser,
+    res: Response,
+    next: NextFunction
+  ) {
     try {
-      const token = req.headers.authorization?.split(" ")[1];
-      if (!token) {
-        throw new Error("user not authorised");
-      }
+      const { id } = req.user!;
 
-      const { _id } = this.authService.verifyToken(token);
-
-      const biddingHistory = await this.interactor.getBiddingHistory(
-        _id.toString()
-      );
+      const biddingHistory = await this.interactor.getBiddingHistory(id);
 
       return res.status(200).json({ success: true, biddingHistory });
     } catch (error) {
@@ -202,17 +174,147 @@ export class AuctionController {
     }
   }
 
-  async onAuctionWon(req: Request, res: Response, next: NextFunction) {
+  async onAuctionWon(req: IRequestWithUser, res: Response, next: NextFunction) {
     try {
-      const token = req.headers.authorization?.split(" ")[1];
-      if (!token) {
-        throw new Error("user not authorised");
-      }
+      const { id } = req.user!;
 
-      const { _id } = this.authService.verifyToken(token);
-
-      const auctionsWon = await this.interactor.getWonAuction(_id.toString());
+      const auctionsWon = await this.interactor.getWonAuction(id);
       return res.status(200).json({ success: true, auctionsWon });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async onAdminVerifyAuction(
+    req: IRequestWithUser,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const { id } = req.params;
+      console.log(req.params);
+
+      await this.interactor.verifyAuction(id);
+      return res
+        .status(200)
+        .json({ success: true, message: "Auction verified successfully" });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async onFilterAuction(
+    req: IRequestWithUser,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const { filter } = req.query;
+
+      const auctions = await this.interactor.filterAuction(filter);
+      const count = await this.interactor.getCount(filter);
+      return res.status(200).json({
+        success: true,
+        message: "auction filtered successfully",
+        auctions,
+        count,
+      });
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  }
+
+  async onBlockAuction(
+    req: IRequestWithUser,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const { id } = req.params;
+      const auction = await this.interactor.blockAuction(id);
+      return res.status(200).json({
+        success: true,
+        message: "auction blocked/unblocked successfully",
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async onSearchAuction(
+    req: IRequestWithUser,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const { search } = req.query;
+
+      const auctions = await this.interactor.searchAuction(search?.toString()!);
+      return res.status(200).json({
+        success: true,
+        message: "search auction successfully",
+        auctions,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async onGetCompletedAuction(
+    req: IRequestWithUser,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const { id } = req.user!;
+      console.log(id);
+
+      const auctions = await this.interactor.getCompletedAuction(id);
+      console.log(auctions);
+
+      return res.status(200).json({
+        success: true,
+        message: "completed auction retreived successfull",
+        auctions,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+  async onGetAuctionWon(
+    req: IRequestWithUser,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const { auctionId } = req.params;
+
+      const auction = await this.interactor.getAuctionWonByAuction(auctionId);
+      return res.status(200).json({
+        success: true,
+        message: " auction retreived successfull",
+        auction,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async onGetAdminDashboard(
+    req: IRequestWithUser,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const data = await this.interactor.getMonthlyRevenue();
+      const count = await this.interactor.getAuctionDetails();
+
+      return res.status(200).json({
+        success: true,
+        data,
+        count,
+      });
     } catch (error) {
       next(error);
     }

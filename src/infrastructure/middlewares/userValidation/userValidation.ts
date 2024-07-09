@@ -19,4 +19,6 @@ export const signupValidator = [
     .withMessage(
       "Password must contain at least one lowercase letter, one uppercase letter, one digit, and one special character"
     ),
+  body("name").notEmpty().withMessage("Name must be provided"),
+  body("phone").notEmpty().withMessage("Phone must be provided"),
 ];

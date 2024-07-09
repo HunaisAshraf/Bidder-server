@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { IPaymentInteractor } from "../../application/interfaces/service/IPaymentInterface";
 import { IAuthService } from "../../application/interfaces/service/IAuthService";
+import { IRequestWithUser } from "../../application/types/types";
 
 export class PaymentController {
   private interactor: IPaymentInteractor;
@@ -10,15 +11,11 @@ export class PaymentController {
     this.authService = authService;
   }
 
-  async onGetWallet(req: Request, res: Response, next: NextFunction) {
+  async onGetWallet(req: IRequestWithUser, res: Response, next: NextFunction) {
     try {
-      const token = req.headers.authorization?.split(" ")[1];
+      const { id } = req.user!;
 
-      if (!token) {
-        throw new Error("user not authorised");
-      }
-      const { _id } = this.authService.verifyToken(token);
-      const data = await this.interactor.getWallet(_id.toString());
+      const data = await this.interactor.getWallet(id);
 
       return res.status(200).json({ success: true, data });
     } catch (error) {
@@ -29,7 +26,6 @@ export class PaymentController {
   async onCreateIntent(req: Request, res: Response, next: NextFunction) {
     try {
       const { amount } = req.body;
-      console.log(amount);
 
       const clientSecret = await this.interactor.createPaymentIntent(amount);
       return res.status(200).json({ success: true, clientSecret });
@@ -38,27 +34,22 @@ export class PaymentController {
     }
   }
 
-  async onAddToWallet(req: Request, res: Response, next: NextFunction) {
+  async onAddToWallet(
+    req: IRequestWithUser,
+    res: Response,
+    next: NextFunction
+  ) {
     try {
-
-      console.log("payment controller");
-      
-      const token = req.headers.authorization?.split(" ")[1];
-
-      if (!token) {
-        throw new Error("user not authorised");
-      }
-
-      const { _id } = this.authService.verifyToken(token);
+      const { id } = req.user!;
 
       const { paymentIntent } = req.body;
 
       const data = await this.interactor.retrievePaymentIntent(
         paymentIntent,
-        _id.toString()
+        id
       );
       console.log("sending response");
-      
+
       return res.status(200).json({ success: true, data });
     } catch (error) {
       console.log("error in controller", error);

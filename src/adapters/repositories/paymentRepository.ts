@@ -1,5 +1,6 @@
 import { IPaymentRepository } from "../../application/interfaces/service/IPaymentRepository";
 import { WalletModel } from "../../infrastructure/db/models/walletModel";
+import { ErrorResponse } from "../../utils/errors";
 
 export class PaymentRepository implements IPaymentRepository {
   async add(id: string, amount: number, details: any): Promise<any> {
@@ -25,11 +26,11 @@ export class PaymentRepository implements IPaymentRepository {
       console.log("updated auctioner wallet", walletData);
 
       if (!walletData) {
-        throw new Error("error in adding payment");
+        throw new ErrorResponse("error in adding payment");
       }
       return walletData;
     } catch (error: any) {
-      throw new Error(error.message);
+      throw new ErrorResponse(error.message, error.status);
     }
   }
 
@@ -42,7 +43,7 @@ export class PaymentRepository implements IPaymentRepository {
 
       return data;
     } catch (error: any) {
-      throw new Error(error.message);
+      throw new ErrorResponse(error.message, error.status);
     }
   }
 
@@ -58,16 +59,16 @@ export class PaymentRepository implements IPaymentRepository {
             transcation: details,
           },
         },
-        {upsert:true}
+        { upsert: true }
       );
 
       if (!walletData) {
-        throw new Error("cannot update amount used");
+        throw new ErrorResponse("cannot update amount used");
       }
 
       return walletData;
     } catch (error: any) {
-      throw new Error(error.message);
+      throw new ErrorResponse(error.message, error.status);
     }
   }
 }

@@ -13,9 +13,18 @@ const controller = new PaymentController(interactor, authService);
 
 router.post(
   "/create-payment-intent",
+  isAuthenticated,
   controller.onCreateIntent.bind(controller)
 );
-router.get("/get-wallet", isAuthenticated, controller.onGetWallet.bind(controller));
-router.post("/add-to-wallet",isAuthenticated, controller.onAddToWallet.bind(controller));
+router.get(
+  "/get-wallet",
+  isAuthenticated,
+  controller.onGetWallet.bind(controller)
+);
+router.post(
+  "/add-to-wallet",
+  isAuthenticated,
+  controller.onAddToWallet.bind(controller)
+);
 
 export { router as paymentRouter };

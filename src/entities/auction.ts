@@ -11,7 +11,10 @@ export class Auction {
     public endDate: Date,
     public auctioner: ObjectId | string,
     public isListed: boolean,
+    public isVerified: boolean,
+    public isBlocked: boolean,
     public images: string[],
-    public completed: boolean
+    public completed: boolean,
+    public started: boolean
   ) {}
 }

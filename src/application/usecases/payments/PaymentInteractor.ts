@@ -1,3 +1,4 @@
+import { ErrorResponse } from "../../../utils/errors";
 import { IPaymentInteractor } from "../../interfaces/service/IPaymentInterface";
 import { IPaymentRepository } from "../../interfaces/service/IPaymentRepository";
 import { StipeIneractor } from "./StripeInteractor";
@@ -14,14 +15,14 @@ export class PaymentInteractor implements IPaymentInteractor {
       const wallet = await this.repository.get(id);
 
       if (!wallet) {
-        throw new Error("No data in wallet");
+        throw new ErrorResponse("No data in wallet", 404);
       }
 
       return wallet;
     } catch (error: any) {
       console.log(error);
 
-      throw new Error(error.message);
+      throw new ErrorResponse(error.message, error.status);
     }
   }
 
@@ -34,20 +35,18 @@ export class PaymentInteractor implements IPaymentInteractor {
       );
       return clientSecret;
     } catch (error: any) {
-      throw new Error(error.message);
+      throw new ErrorResponse(error.message, error.status);
     }
   }
   async retrievePaymentIntent(paymentIntent: string, id: string): Promise<any> {
     try {
-
       console.log("retrieve payment interactor");
-      
 
       const paymentData = await this.stripeInteractor.retreivePaymentIntent(
         paymentIntent
       );
       if (paymentData.status !== "succeeded") {
-        throw new Error("error in payment");
+        throw new ErrorResponse("error in payment");
       }
 
       let amount = paymentData.amount / 100;
@@ -70,14 +69,14 @@ export class PaymentInteractor implements IPaymentInteractor {
       );
 
       if (!updatedData) {
-        throw new Error("error in payment");
+        throw new ErrorResponse("error in payment", 500);
       }
 
       return transcationDetails;
     } catch (error: any) {
       console.log("error in payment payment interactor", error);
 
-      throw new Error(error.message);
+      throw new ErrorResponse(error.message, error.status);
     }
   }
 }

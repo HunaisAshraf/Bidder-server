@@ -1,11 +1,14 @@
 import bcryptjs from "bcryptjs";
+import { ErrorResponse } from "../../utils/errors";
 
-export const generateHashPassword = async (password: string): Promise<string> => {
+export const generateHashPassword = async (
+  password: string
+): Promise<string> => {
   try {
     const hashedPassword = await bcryptjs.hash(password, 10);
     return hashedPassword;
-  } catch (error) {
-    throw new Error("error in hashing password");
+  } catch (error: any) {
+    throw new ErrorResponse(error.message, error.status);
   }
 };
 
@@ -15,7 +18,7 @@ export const comparePassword = async (
 ): Promise<boolean> => {
   try {
     return bcryptjs.compare(password, hashedPassword);
-  } catch (error) {
-    throw new Error("error in comparing hash password");
+  } catch (error: any) {
+    throw new ErrorResponse(error.message, error.status);
   }
 };
