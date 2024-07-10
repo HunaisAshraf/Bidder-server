@@ -40,12 +40,12 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(morgan("dev"));
 
-app.use("/api/auth", userRouter);
-app.use("/api/auction", auctionRouter);
-app.use("/api/payments", paymentRouter);
-app.use("/api/chat", messageRouter);
-app.use("/api/notification", notificationRoute);
-app.use("/api/watchlist", watchListRoute);
+app.use("/api/v1/auth", userRouter);
+app.use("/api/v1/auction", auctionRouter);
+app.use("/api/v1/payments", paymentRouter);
+app.use("/api/v1/chat", messageRouter);
+app.use("/api/v1/notification", notificationRoute);
+app.use("/api/v1/watchlist", watchListRoute);
 app.use(errorHandler);
 
 const joinedUsers: any = {};
