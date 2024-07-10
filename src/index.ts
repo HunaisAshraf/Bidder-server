@@ -29,7 +29,7 @@ const io = new Server(server, {
     credentials: true,
   },
 });
-
+console.log(process.env.CLIENT_ORIGIN);
 app.use(
   cors({
     origin: process.env.CLIENT_ORIGIN,
