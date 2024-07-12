@@ -22,12 +22,14 @@ jobs:
     needs: build
     runs-on: self-hosted
     steps:
-      - name: Pulling image
-        run: docker pull hunais/bidder-backend:latest
       - name: Stop existing container
         run: docker stop bidder-backend || true
       - name: Deleting existing container
         run: docker rm bidder-backend || true
+      - name: Deleting existing image
+        run: docker rmi -f hunais/bidder-backend:latest
+      - name: Pulling image
+        run: docker pull hunais/bidder-backend:latest
       - name: Run docker container
         run: |
           docker run -d -p 5000:5000 --name bidder-backend \
