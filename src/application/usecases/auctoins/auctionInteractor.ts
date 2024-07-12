@@ -173,6 +173,20 @@ export class AuctionInteractor implements IAuctionInteractor {
         throw new ErrorResponse("No sufficient balance in wallet", 400);
       }
 
+      const allBids = await this.repository.getBid(auctionId);
+
+      const lastBidderWallet = await this.paymentRepository.get(
+        allBids[0].userId
+      );
+
+      await this.paymentRepository.edit(
+        lastBidderWallet.user,
+        {
+          amountUsed: lastBidderWallet.amountUsed - allBids[0].bidAmount,
+        },
+        []
+      );
+
       let amountUsed = bidAmount + wallet.amountUsed;
 
       await this.paymentRepository.edit(
