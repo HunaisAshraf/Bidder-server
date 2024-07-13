@@ -259,6 +259,8 @@ export class AuctionInteractor implements IAuctionInteractor {
       console.log("available bids", bids);
 
       if (bids.length === 0) {
+        auction.completed = true;
+        await this.repository.edit(auction._id.toString(), auction);
         throw new ErrorResponse("no bids available", 400);
       }
 

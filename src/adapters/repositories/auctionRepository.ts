@@ -144,7 +144,7 @@ export class AuctionRepositry implements IAuctionRepository {
         completed: false,
         endDate: { $lte: new Date() },
       });
-      console.log(completedAuction);
+      console.log("completed", completedAuction);
 
       return completedAuction;
     } catch (error: any) {
