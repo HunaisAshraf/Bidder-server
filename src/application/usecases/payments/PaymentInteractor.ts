@@ -20,16 +20,12 @@ export class PaymentInteractor implements IPaymentInteractor {
 
       return wallet;
     } catch (error: any) {
-      console.log(error);
-
       throw new ErrorResponse(error.message, error.status);
     }
   }
 
   async createPaymentIntent(amount: number): Promise<string> {
     try {
-      console.log(amount);
-
       const clientSecret = await this.stripeInteractor.createPaymentIntent(
         amount
       );
@@ -40,8 +36,6 @@ export class PaymentInteractor implements IPaymentInteractor {
   }
   async retrievePaymentIntent(paymentIntent: string, id: string): Promise<any> {
     try {
-      console.log("retrieve payment interactor");
-
       const paymentData = await this.stripeInteractor.retreivePaymentIntent(
         paymentIntent
       );
@@ -74,8 +68,6 @@ export class PaymentInteractor implements IPaymentInteractor {
 
       return transcationDetails;
     } catch (error: any) {
-      console.log("error in payment payment interactor", error);
-
       throw new ErrorResponse(error.message, error.status);
     }
   }

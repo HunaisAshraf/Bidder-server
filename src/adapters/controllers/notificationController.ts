@@ -34,8 +34,6 @@ export class NotificaionController {
         notificaion,
       });
     } catch (error) {
-      console.log(error);
-
       next(error);
     }
   }
@@ -75,8 +73,6 @@ export class NotificaionController {
         notification,
       });
     } catch (error) {
-      console.log(error);
-
       next(error);
     }
   }

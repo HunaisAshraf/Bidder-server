@@ -17,7 +17,6 @@ export class AuctionController {
       const auctions = await this.interactor.getAllAuctions();
       return res.status(200).json({ success: true, auctions });
     } catch (error) {
-      console.log(error);
       next(error);
     }
   }
@@ -27,7 +26,6 @@ export class AuctionController {
       const auctions = await this.interactor.adminGetAllAuctions();
       return res.status(200).json({ success: true, auctions });
     } catch (error) {
-      console.log(error);
       next(error);
     }
   }
@@ -39,7 +37,6 @@ export class AuctionController {
       const auctions = await this.interactor.getAuction(id);
       return res.status(200).json({ success: true, auctions });
     } catch (error) {
-      console.log(error);
       next(error);
     }
   }
@@ -57,7 +54,6 @@ export class AuctionController {
         auction,
       });
     } catch (error) {
-      console.log(error);
       next(error);
     }
   }
@@ -70,7 +66,6 @@ export class AuctionController {
 
       return res.status(200).json({ success: true, auction });
     } catch (error) {
-      console.log(error);
       next(error);
     }
   }
@@ -94,7 +89,6 @@ export class AuctionController {
         auction,
       });
     } catch (error) {
-      console.log(error);
       next(error);
     }
   }
@@ -123,7 +117,6 @@ export class AuctionController {
         auction,
       });
     } catch (error) {
-      console.log(error);
       next(error);
     }
   }
@@ -188,7 +181,6 @@ export class AuctionController {
   ) {
     try {
       const { id } = req.params;
-      console.log(req.params);
 
       await this.interactor.verifyAuction(id);
       return res
@@ -216,7 +208,6 @@ export class AuctionController {
         count,
       });
     } catch (error) {
-      console.log(error);
       next(error);
     }
   }
@@ -264,10 +255,8 @@ export class AuctionController {
   ) {
     try {
       const { id } = req.user!;
-      console.log(id);
 
       const auctions = await this.interactor.getCompletedAuction(id);
-      console.log(auctions);
 
       return res.status(200).json({
         success: true,

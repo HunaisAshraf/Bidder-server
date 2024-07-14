@@ -58,7 +58,6 @@ export const isAuctioner = async (
 ) => {
   try {
     const token = req.headers.authorization?.split(" ")[1];
-    console.log(req.headers.authorization);
 
     if (!token) {
       return res
@@ -73,13 +72,11 @@ export const isAuctioner = async (
         .status(400)
         .send({ success: false, error: "user not authorised" });
     }
-    console.log("askdfjhaksdjhfkjashdkfhasdkfhkjasdhfjk");
 
     req.user = { id: _id.toString(), role };
 
     next();
   } catch (error) {
-    console.log("error in token", error);
     next(error);
   }
 };
@@ -108,8 +105,6 @@ export const isAdmin = async (
 
     next();
   } catch (error) {
-    console.log(error);
-
     next(error);
   }
 };

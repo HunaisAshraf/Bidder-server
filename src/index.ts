@@ -60,18 +60,13 @@ io.on("connection", (socket) => {
   socket.on("join_chat", (chatId) => {
     socket.join(chatId);
     roomId = chatId;
-    console.log("connected to chat id", chatId);
   });
 
   socket.on("join_call", (user) => {
-    console.log("join call", user);
-
     io.to(roomId).emit("incoming_call", user);
   });
 
   socket.on("call_rejected", (chat) => {
-    console.log("reject", chat);
-
     io.to(chat).emit("call_declined");
   });
 

@@ -14,11 +14,9 @@ export class AuctionRepositry implements IAuctionRepository {
       const auctions = await AuctionModel.find()
         .sort({ startDate: -1 })
         .populate("auctioner");
-      console.log(auctions);
 
       return auctions;
     } catch (error: any) {
-      console.log("error in getting all auction", error);
       throw new ErrorResponse(error.message, error.status);
     }
   }
@@ -28,7 +26,6 @@ export class AuctionRepositry implements IAuctionRepository {
       await data.save();
       return data;
     } catch (error: any) {
-      console.log("error in adding auction to database", error);
       throw new ErrorResponse(error.message, error.status);
     }
   }
@@ -47,7 +44,6 @@ export class AuctionRepositry implements IAuctionRepository {
 
       return auctions;
     } catch (error: any) {
-      console.log("error in getting all auction", error);
       throw new ErrorResponse(error.message, error.status);
     }
   }
@@ -62,7 +58,6 @@ export class AuctionRepositry implements IAuctionRepository {
 
       return auctions;
     } catch (error: any) {
-      console.log("error in getting all auction", error);
       throw new ErrorResponse(error.message, error.status);
     }
   }
@@ -77,18 +72,14 @@ export class AuctionRepositry implements IAuctionRepository {
 
       return auction;
     } catch (error: any) {
-      console.log("error in getting auction", error);
       throw new ErrorResponse(error.message, error.status);
     }
   }
   async edit(id: string, value: Auction): Promise<Auction> {
     try {
-      console.log(id, value);
-
       const auction = await AuctionModel.findByIdAndUpdate(id, value, {
         new: true,
       });
-      console.log(auction);
 
       if (!auction) {
         throw new ErrorResponse("error in editing auction", 500);
@@ -96,7 +87,6 @@ export class AuctionRepositry implements IAuctionRepository {
 
       return auction;
     } catch (error: any) {
-      console.log("error in editing auction", error);
       throw new ErrorResponse(error.message, error.status);
     }
   }
@@ -109,14 +99,11 @@ export class AuctionRepositry implements IAuctionRepository {
         { new: true, upsert: true }
       );
 
-      console.log(newBid);
-
       if (!newBid) {
         throw new ErrorResponse("Error in adding bid", 500);
       }
       return newBid;
     } catch (error: any) {
-      console.log(error);
       throw new ErrorResponse(error.message, error.status);
     }
   }
@@ -134,13 +121,10 @@ export class AuctionRepositry implements IAuctionRepository {
 
   async getCompletedAuction(): Promise<Auction[]> {
     try {
-      console.log("getting completed auctionn from database");
-
       const completedAuction = await AuctionModel.find({
         completed: false,
         endDate: { $lte: new Date() },
       });
-      console.log("completed", completedAuction);
 
       return completedAuction;
     } catch (error: any) {
@@ -209,10 +193,7 @@ export class AuctionRepositry implements IAuctionRepository {
 
   async filter(filter: any): Promise<Auction[]> {
     try {
-      console.log("filter auction", filter);
-
       const auction = await AuctionModel.find(filter).populate("auctioner");
-      console.log(auction);
 
       return auction;
     } catch (error: any) {
@@ -221,8 +202,6 @@ export class AuctionRepositry implements IAuctionRepository {
   }
   async count(filter: any): Promise<number> {
     try {
-      console.log("filter in repo", filter);
-
       const count = await AuctionModel.find({
         filter,
       })

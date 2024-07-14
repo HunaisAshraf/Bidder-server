@@ -36,11 +36,6 @@ router.post(
 router.post("/google-signup", controller.onGoogleSignUp.bind(controller));
 router.post("/verify-email", controller.onVerifyAccount.bind(controller));
 router.post("/forgotpassword", controller.onForgotPassword.bind(controller));
-// router.put(
-//   "/update-role",
-//   isAuthenticated,
-//   controller.onUpdateUser.bind(controller)
-// );
 router.put(
   "/update-user",
   isAuthenticated,

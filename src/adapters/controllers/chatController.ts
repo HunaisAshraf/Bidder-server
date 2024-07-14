@@ -58,8 +58,6 @@ export class ChatController {
       const { chatId } = req.params;
       const { message, image } = req.body;
 
-      console.log(req.body);
-
       const newMessage = await this.interactor.createMessage(
         chatId,
         id,

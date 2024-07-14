@@ -15,8 +15,6 @@ export class UserRepository implements IUserRepository {
   }
   async count(filter: any): Promise<number> {
     try {
-      console.log("filter in repo", filter);
-
       const count = await UserModel.find({
         $and: [{ role: { $ne: "admin" } }, filter],
       }).countDocuments();
@@ -65,17 +63,12 @@ export class UserRepository implements IUserRepository {
   }
   async update(id: string, value: any): Promise<User | null> {
     try {
-      console.log(id, value);
-
       const updatedUser = await UserModel.findByIdAndUpdate(id, value, {
         new: true,
       });
-      console.log(updatedUser);
 
       return updatedUser;
     } catch (error: any) {
-      console.log(error);
-
       throw new ErrorResponse(error.message, error.status);
     }
   }

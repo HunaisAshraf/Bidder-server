@@ -10,8 +10,7 @@ export const sendMail = async (
   token: string
 ) => {
   try {
-    console.log("otp sending...");
-
+    console.log("mail sending...");
     let transporter;
     if (config.MODE === "production") {
       transporter = nodemailer.createTransport({
@@ -50,7 +49,6 @@ export const sendMail = async (
     console.log("otp successful");
     return info;
   } catch (error: any) {
-    console.log(error);
     throw new ErrorResponse(error.message, error.status);
   }
 };
@@ -108,7 +106,6 @@ export const sendAuctionMail = async (
     console.log("mail successful");
     return info;
   } catch (error: any) {
-    console.log(error);
     throw new ErrorResponse(error.message, error.status);
   }
 };

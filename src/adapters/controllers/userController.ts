@@ -20,13 +20,11 @@ export class UserController {
       const errors = validationResult(req);
 
       if (!errors.isEmpty()) {
-        console.log(errors.array());
         throw new ErrorResponse("Invalid email or password", 401);
       }
 
       const { email, password } = req.body;
       const user = await this.interactor.login(email, password);
-      console.log(user);
 
       if (user?.role === "admin") {
         throw new ErrorResponse("User not found", 404);
@@ -61,7 +59,6 @@ export class UserController {
       const errors = validationResult(req);
 
       if (!errors.isEmpty()) {
-        console.log(errors.array());
         throw new ErrorResponse("Invalid email or password", 401);
       }
 
@@ -98,8 +95,6 @@ export class UserController {
       const errors = validationResult(req);
 
       if (!errors.isEmpty()) {
-        console.log(errors.array());
-
         let err = errors.array();
         throw new ErrorResponse(err[0].msg, 401);
       }
@@ -125,8 +120,6 @@ export class UserController {
       });
       return res.status(200).json({ success: true, user: newUser, token });
     } catch (error) {
-      console.log(error);
-
       next(error);
     }
   }
@@ -187,14 +180,10 @@ export class UserController {
 
   async onGoogleSignUp(req: Request, res: Response, next: NextFunction) {
     try {
-      console.log("reached controeller");
-
       const body = req.body;
       body.isVerified = true;
-      console.log("body", body);
 
       const user = await this.interactor.googleSignUp(body);
-      console.log("user", user);
 
       const data = {
         _id: user?._id,
@@ -204,14 +193,12 @@ export class UserController {
 
       const token = this.authService.generateToken(data);
 
-      console.log(token);
-
       res.cookie("token", token, {
         httpOnly: true,
         secure: false,
         sameSite: "lax",
       });
-      console.log("user", user);
+
       return res.status(200).json({ success: true, user, token });
     } catch (error) {
       next(error);
@@ -295,10 +282,9 @@ export class UserController {
   async onFilterUser(req: Request, res: Response, next: NextFunction) {
     try {
       const { filter, page } = req.query;
-      console.log(filter);
 
       const users = await this.interactor.filterUser(filter, page);
-      console.log(users);
+
       const count = await this.interactor.getCount(filter);
 
       return res.status(200).json({

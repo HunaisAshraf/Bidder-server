@@ -28,13 +28,9 @@ cron.schedule("*/30 * * * * *", async () => {
     }
 
     for (let auction of auctions) {
-      console.log("single auction");
-
       await auctionInteractor.completeAuction(auction);
     }
-  } catch (error: any) {
-    console.log(error.message);
-  }
+  } catch (error: any) {}
 });
 cron.schedule("*/30 * * * * *", async () => {
   try {
@@ -45,11 +41,7 @@ cron.schedule("*/30 * * * * *", async () => {
     }
 
     for (let auction of auctions) {
-      console.log("single auction");
-
       await auctionInteractor.startAuction(auction);
     }
-  } catch (error: any) {
-    console.log(error.message);
-  }
+  } catch (error: any) {}
 });

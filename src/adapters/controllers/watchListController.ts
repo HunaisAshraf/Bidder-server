@@ -17,7 +17,6 @@ export class WatchListController {
       const { id } = req.user!;
 
       const watchLists = await this.interactor.getList(id);
-      console.log(watchLists);
 
       return res.status(200).json({
         success: true,

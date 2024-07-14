@@ -16,7 +16,6 @@ export class MailService implements IMailerService {
   async accountVerificationMail(user: User, type: string): Promise<void> {
     try {
       let token = await generateHashPassword(user._id.toString());
-      console.log("kdjsfkjasdhfasdhfjkshdfjkhsdjkfhkhsdfsdhfjk");
 
       const currentDate = new Date();
       const twoDaysLater = new Date(currentDate);
@@ -47,7 +46,4 @@ export class MailService implements IMailerService {
       throw new ErrorResponse(error.message, error.status);
     }
   }
-  // async forgotPasswordMail(email: string): Promise<void> {
-  //   throw new Error("Method not implemented.");
-  // }
 }

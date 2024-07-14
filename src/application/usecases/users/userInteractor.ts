@@ -29,7 +29,6 @@ export class UserInteractor implements IUserInteractor {
       } else {
         searchFilter = {};
       }
-      console.log(filter, searchFilter);
 
       const count = await this.repository.count(searchFilter);
       return count;
@@ -107,11 +106,7 @@ export class UserInteractor implements IUserInteractor {
 
   async signup(user: User): Promise<User> {
     try {
-      console.log("REACHED INTERACTOR");
-
       const userExist = await this.repository.findByEmail(user.email);
-
-      console.log("userExist", userExist);
 
       if (userExist) {
         throw new ErrorResponse("user aldready registered", 400);
@@ -129,16 +124,12 @@ export class UserInteractor implements IUserInteractor {
 
       return newUser;
     } catch (error: any) {
-      console.log(error.message);
-
       throw new ErrorResponse(error.message, error.status);
     }
   }
 
   async updateDetails(id: string, value: User): Promise<User> {
     try {
-      console.log("user", value, id);
-
       const data = await this.repository.findByEmail(value.email);
 
       if (data && data._id === value._id) {
@@ -194,7 +185,6 @@ export class UserInteractor implements IUserInteractor {
             user._id.toString(),
             data
           );
-          console.log(updatedUser);
 
           return updatedUser;
         }
@@ -216,7 +206,6 @@ export class UserInteractor implements IUserInteractor {
             user._id.toString(),
             data
           );
-          console.log(updatedUser);
 
           return updatedUser;
         }

@@ -76,13 +76,11 @@ export class AuctionInteractor implements IAuctionInteractor {
     try {
       auction.auctioner = id;
       auction.currentBid = auction.basePrice;
-      console.log(auction);
 
       const data = await this.repository.add(auction);
 
       return data;
     } catch (error: any) {
-      console.log("error in add auction interactor", error);
       throw new ErrorResponse(error.message, error.status);
     }
   }
@@ -102,8 +100,6 @@ export class AuctionInteractor implements IAuctionInteractor {
       const editedAuction = await this.repository.edit(auctionId, value);
       return editedAuction;
     } catch (error: any) {
-      console.log("error in editing auction", error);
-
       throw new ErrorResponse(error.message, error.status);
     }
   }
@@ -143,8 +139,6 @@ export class AuctionInteractor implements IAuctionInteractor {
       const auction = await this.repository.findOne(auctionId);
       const wallet = await this.paymentRepository.get(userId);
       const user = await this.userRepository.findOne(userId);
-
-      console.log(wallet);
 
       if (auction.startDate > new Date()) {
         throw new ErrorResponse("Auction has not started yet", 400);
@@ -241,8 +235,6 @@ export class AuctionInteractor implements IAuctionInteractor {
 
   async completedAuction(): Promise<Auction[]> {
     try {
-      console.log("completed auction function");
-
       const completedAuction = await this.repository.getCompletedAuction();
 
       return completedAuction;
@@ -254,8 +246,6 @@ export class AuctionInteractor implements IAuctionInteractor {
   async completeAuction(auction: Auction): Promise<void> {
     try {
       const bids = await this.repository.getBid(auction._id.toString());
-
-      console.log("available bids", bids);
 
       if (bids.length === 0) {
         auction.completed = true;
@@ -280,8 +270,6 @@ export class AuctionInteractor implements IAuctionInteractor {
         );
       }
 
-      console.log("highest bidder", highestBidder);
-
       if (!highestBidder) {
         throw new ErrorResponse("no bids available");
       }
@@ -292,14 +280,12 @@ export class AuctionInteractor implements IAuctionInteractor {
         auctioner: auction?.auctioner,
         bidAmount: highestBidder?.bidAmount,
       };
-      console.log("auction", auctionWinner);
 
       const winner = await this.repository.addWinner(auctionWinner);
 
       const wallet = await this.paymentRepository.get(
         highestBidder.userId._id.toString()
       );
-      console.log("wallett", wallet);
 
       const bidderPaymentUpdate = await this.paymentRepository.edit(
         highestBidder.userId._id.toString(),
@@ -313,8 +299,6 @@ export class AuctionInteractor implements IAuctionInteractor {
           action: `$ ${highestBidder.bidAmount} was paid for the auction ${auction.itemName}`,
         }
       );
-
-      console.log("bidder payment update", bidderPaymentUpdate);
 
       const auctionerWallet = await this.paymentRepository.get(
         auction.auctioner.toString()
@@ -335,8 +319,6 @@ export class AuctionInteractor implements IAuctionInteractor {
         }
       );
 
-      console.log("auctioner payment updated", auctionerPaymentUpdate);
-
       auction.completed = true;
       auction.currentBid = 0;
 
@@ -351,8 +333,6 @@ export class AuctionInteractor implements IAuctionInteractor {
 
   async startedAuction(): Promise<Auction[]> {
     try {
-      console.log("started auction function");
-
       const startedAuction = await this.repository.getStartedAuction();
 
       return startedAuction;
@@ -405,7 +385,6 @@ export class AuctionInteractor implements IAuctionInteractor {
   async verifyAuction(id: string): Promise<Auction> {
     try {
       const auction = await this.repository.verify(id);
-      console.log("interactor", auction);
 
       return auction;
     } catch (error: any) {
@@ -453,8 +432,6 @@ export class AuctionInteractor implements IAuctionInteractor {
         searchFilter = {};
       }
 
-      console.log(searchFilter);
-
       const count = await this.repository.count(searchFilter);
       return count;
     } catch (error: any) {
@@ -487,8 +464,6 @@ export class AuctionInteractor implements IAuctionInteractor {
   }
   async getCompletedAuction(userId: string): Promise<AuctionWinner[]> {
     try {
-      console.log("interactor");
-
       const auction = await this.repository.completedAuctionByAuctioner(userId);
 
       return auction;

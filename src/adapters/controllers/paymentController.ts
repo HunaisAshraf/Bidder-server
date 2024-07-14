@@ -48,12 +48,9 @@ export class PaymentController {
         paymentIntent,
         id
       );
-      console.log("sending response");
 
       return res.status(200).json({ success: true, data });
     } catch (error) {
-      console.log("error in controller", error);
-
       next(error);
     }
   }

@@ -11,7 +11,6 @@ export class AuthService implements IAuthService {
       });
       return token;
     } catch (error) {
-      console.log(error);
       throw new Error("error in generating token");
     }
   }
@@ -21,7 +20,6 @@ export class AuthService implements IAuthService {
 
       return data;
     } catch (error) {
-      console.log(error);
       throw new Error("user not authorised");
     }
   }
