@@ -36,10 +36,6 @@ export class AuctionController {
     try {
       const { id, role } = req.user!;
 
-      // if (role !== "auctioner" && role !== "admin") {
-      //   throw new Error("user not authorised");
-      // }
-
       const auctions = await this.interactor.getAuction(id);
       return res.status(200).json({ success: true, auctions });
     } catch (error) {

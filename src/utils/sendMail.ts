@@ -1,6 +1,7 @@
 import nodemailer from "nodemailer";
 import { ErrorResponse } from "./errors";
 import { Auction } from "../entities/auction";
+import { config } from "../infrastructure/config/config";
 
 export const sendMail = async (
   name: string,
@@ -12,14 +13,14 @@ export const sendMail = async (
     console.log("otp sending...");
 
     let transporter;
-    if (process.env.MODE === "production") {
+    if (config.MODE === "production") {
       transporter = nodemailer.createTransport({
         host: "smtp.gmail.com",
         port: 587,
         secure: false,
         auth: {
-          user: process.env.EMAIL,
-          pass: process.env.PASSWORD,
+          user: config.EMAIL,
+          pass: config.PASSWORD,
         },
       });
     } else {
@@ -27,8 +28,8 @@ export const sendMail = async (
         host: "sandbox.smtp.mailtrap.io",
         port: 2525,
         auth: {
-          user: process.env.NODEMAILER_USER,
-          pass: process.env.NODEMAILER_PASSWORD,
+          user: config.NODEMAILER_USER,
+          pass: config.NODEMAILER_PASSWORD,
         },
       });
     }
@@ -39,7 +40,7 @@ export const sendMail = async (
         type === "verifyEmail" ? "Account verification" : "Reset Password",
       html: `<h2>Hi ${name}</h2><br/>
       <p>Click this <a href="${
-        process.env.MAIL_LINK
+        config.MAIL_LINK
       }/verifyemail?type=${type}&token=${token}&email=${email}"> link </a>to ${
         type === "verifyEmail" ? "verify your account " : "reset password"
       } 
@@ -63,14 +64,14 @@ export const sendAuctionMail = async (
     console.log("mail sending...");
 
     let transporter;
-    if (process.env.MODE === "production") {
+    if (config.MODE === "production") {
       transporter = nodemailer.createTransport({
         host: "smtp.gmail.com",
         port: 587,
         secure: false,
         auth: {
-          user: process.env.EMAIL,
-          pass: process.env.PASSWORD,
+          user: config.EMAIL,
+          pass: config.PASSWORD,
         },
       });
     } else {
@@ -78,8 +79,8 @@ export const sendAuctionMail = async (
         host: "sandbox.smtp.mailtrap.io",
         port: 2525,
         auth: {
-          user: process.env.NODEMAILER_USER,
-          pass: process.env.NODEMAILER_PASSWORD,
+          user: config.NODEMAILER_USER,
+          pass: config.NODEMAILER_PASSWORD,
         },
       });
     }
@@ -100,7 +101,7 @@ export const sendAuctionMail = async (
       <li>End Date: ${auction.endDate}</li>
       <li>Current Bid: ${auction.currentBid}</li>
       </ul><br/>
-      <p>Click this link to jump straight to the action: <a href="${process.env.MAIL_LINK}/auctions/${auction._id}"a> Click Here! </a> </p><br />
+      <p>Click this link to jump straight to the action: <a href="${config.MAIL_LINK}/auctions/${auction._id}"a> Click Here! </a> </p><br />
       <p>Happy BIdding!</p>
       `,
     });

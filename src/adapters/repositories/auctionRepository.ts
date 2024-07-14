@@ -103,10 +103,6 @@ export class AuctionRepositry implements IAuctionRepository {
 
   async addBid(bid: Bid): Promise<Bid> {
     try {
-      // const newBid = new BidModel(bid);
-      // await newBid.save();
-      console.log(bid);
-
       const newBid = await BidModel.findOneAndUpdate(
         { auctionId: bid.auctionId, userId: bid.userId },
         bid,

@@ -168,24 +168,6 @@ export class UserInteractor implements IUserInteractor {
     }
   }
 
-  // async updatePassword(email: string, password: string): Promise<User> {
-  //   try {
-  //     const hashedPassword = await generateHashPassword(password);
-
-  //     const data = await this.repository.update(email, {
-  //       password: hashedPassword,
-  //     });
-
-  //     if (!data) {
-  //       throw new Error("error in updating user");
-  //     }
-
-  //     return data;
-  //   } catch (error) {
-  //     throw new Error("Method not implemented.");
-  //   }
-  // }
-
   async verifyMail(
     type: string,
     token: string,

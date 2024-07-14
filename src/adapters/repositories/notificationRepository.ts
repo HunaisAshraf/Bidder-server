@@ -45,10 +45,6 @@ export class NotificationRepository implements INotificationRepository {
         }
       );
 
-      // if (!notification) {
-      //   throw new ErrorResponse("error in updating notification", 500);
-      // }
-
       return notification;
     } catch (error: any) {
       throw new ErrorResponse(error.message, error.status);

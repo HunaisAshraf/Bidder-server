@@ -1,9 +1,10 @@
 import Stripe from "stripe";
 import dotenv from "dotenv";
 import { ErrorResponse } from "../../../utils/errors";
+import { config } from "../../../infrastructure/config/config";
 dotenv.config();
 
-const stripe = new Stripe(process.env.STRIPE_API_KEY as string);
+const stripe = new Stripe(config.STRIPE_API_KEY as string);
 
 export class StipeIneractor {
   async createPaymentIntent(amount: number): Promise<any> {

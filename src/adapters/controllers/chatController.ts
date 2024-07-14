@@ -69,11 +69,6 @@ export class ChatController {
 
       io.to(chatId).emit("receive_message", newMessage);
 
-      // io.on("send_message", (data) => {
-      //   console.log("asdfasdfsd0f0", data);
-
-      // });
-
       return res.status(200).json({
         success: true,
         newMessage,

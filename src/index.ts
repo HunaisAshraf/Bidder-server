@@ -15,6 +15,7 @@ import { v4 as uuidv4 } from "uuid";
 import "./infrastructure/scheduler/auctionSchedule";
 import { notificationRoute } from "./infrastructure/routes/notificationRoute";
 import { watchListRoute } from "./infrastructure/routes/watchListRoute";
+import { config } from "./infrastructure/config/config";
 
 dotenv.config();
 
@@ -25,15 +26,15 @@ connectDb();
 
 const io = new Server(server, {
   cors: {
-    origin: process.env.CLIENT_ORIGIN,
+    origin: config.CLIENT_ORIGIN,
     methods: ["GET", "POST"],
     credentials: true,
   },
 });
-console.log(process.env.CLIENT_ORIGIN);
+
 app.use(
   cors({
-    origin: process.env.CLIENT_ORIGIN,
+    origin: config.CLIENT_ORIGIN,
     credentials: true,
   })
 );
@@ -77,21 +78,6 @@ io.on("connection", (socket) => {
   socket.on("send_notification", ({ user, newMessage, chat }) => {
     io.emit("notification_send", { user, newMessage });
   });
-
-  // socket.on("join_call", ({ room, user }) => {
-  //   console.log("joining call");
-
-  // if (joinedUsers[room]) {
-  //   joinedUsers[room].push(user);
-  // } else {
-  //   joinedUsers[room] = [user];
-  // }
-
-  // console.log("connected to video chat ", room, user);
-  // console.log(joinedUsers);
-
-  // io.to(room).emit("user-joined", user);
-  // });
 
   socket.on("disconnect", () => {
     console.log("socket disconnected");

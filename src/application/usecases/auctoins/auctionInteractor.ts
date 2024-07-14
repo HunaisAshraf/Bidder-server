@@ -204,7 +204,6 @@ export class AuctionInteractor implements IAuctionInteractor {
       };
 
       const newBid = await this.repository.addBid(bid);
-      // newBid.userId = user
 
       auction.currentBid = bidAmount;
       const updatedAuction = await this.repository.edit(
@@ -320,12 +319,6 @@ export class AuctionInteractor implements IAuctionInteractor {
       const auctionerWallet = await this.paymentRepository.get(
         auction.auctioner.toString()
       );
-
-      // const transcationDetails = {
-      //   amount,
-      //   action: "added to wallet",
-      //   time: new Date(),
-      // };
 
       let auctionerBalance = 0;
       if (auctionerWallet) {
