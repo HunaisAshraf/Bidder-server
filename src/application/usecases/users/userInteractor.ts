@@ -340,7 +340,9 @@ export class UserInteractor implements IUserInteractor {
     try {
       const users = await this.repository.allUsers();
 
-      let count: any = {};
+      let count: any = {
+        all: users.length,
+      };
 
       for (let user of users) {
         if (!count[user.role]) {

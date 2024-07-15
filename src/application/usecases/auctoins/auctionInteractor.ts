@@ -496,6 +496,7 @@ export class AuctionInteractor implements IAuctionInteractor {
         upcoming: 0,
         live: 0,
         completed: 0,
+        all: auctions.length,
       };
       for (let auction of auctions) {
         if (new Date(auction.startDate) > new Date()) {
