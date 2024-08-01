@@ -1,4 +1,3 @@
-import { ObjectId } from "mongoose";
 import { Auction } from "../../../entities/auction";
 import { IAuctionInteractor } from "../../interfaces/auction/IAuctionInteractor";
 import { IAuctionRepository } from "../../interfaces/auction/IAuctionRepository";
@@ -168,6 +167,8 @@ export class AuctionInteractor implements IAuctionInteractor {
       }
 
       const allBids = await this.repository.getBid(auctionId);
+
+      console.log(allBids);
 
       const lastBidderWallet = await this.paymentRepository.get(
         allBids[0].userId
