@@ -168,19 +168,18 @@ export class AuctionInteractor implements IAuctionInteractor {
 
       const allBids = await this.repository.getBid(auctionId);
 
-      console.log(allBids);
-
-      const lastBidderWallet = await this.paymentRepository.get(
-        allBids[0].userId
-      );
-
-      await this.paymentRepository.edit(
-        lastBidderWallet.user,
-        {
-          amountUsed: lastBidderWallet.amountUsed - allBids[0].bidAmount,
-        },
-        []
-      );
+      if (allBids.length > 0) {
+        const lastBidderWallet = await this.paymentRepository.get(
+          allBids[0].userId
+        );
+        await this.paymentRepository.edit(
+          lastBidderWallet.user,
+          {
+            amountUsed: lastBidderWallet.amountUsed - allBids[0].bidAmount,
+          },
+          []
+        );
+      }
 
       let amountUsed = bidAmount + wallet.amountUsed;
 

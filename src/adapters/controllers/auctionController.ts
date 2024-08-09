@@ -127,6 +127,8 @@ export class AuctionController {
 
       const { bidAmount, auctionId } = req.body;
 
+      console.log(id, bidAmount, auctionId);
+
       const bid = await this.interactor.placeBid(bidAmount, auctionId, id);
 
       return res.status(200).json({ success: true });
