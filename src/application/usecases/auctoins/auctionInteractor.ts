@@ -136,8 +136,8 @@ export class AuctionInteractor implements IAuctionInteractor {
   ): Promise<Bid> {
     try {
       const auction = await this.repository.findOne(auctionId);
-      const wallet = await this.paymentRepository.get(userId);
       const user = await this.userRepository.findOne(userId);
+      let wallet = await this.paymentRepository.get(userId);
 
       if (auction.startDate > new Date()) {
         throw new ErrorResponse("Auction has not started yet", 400);
@@ -172,15 +172,16 @@ export class AuctionInteractor implements IAuctionInteractor {
         const lastBidderWallet = await this.paymentRepository.get(
           allBids[0].userId
         );
+
         await this.paymentRepository.edit(
           lastBidderWallet.user,
           {
             amountUsed: lastBidderWallet.amountUsed - allBids[0].bidAmount,
           },
-          []
+          {}
         );
       }
-
+      wallet = await this.paymentRepository.get(userId);
       let amountUsed = bidAmount + wallet.amountUsed;
 
       await this.paymentRepository.edit(
