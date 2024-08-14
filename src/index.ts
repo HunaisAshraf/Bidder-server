@@ -50,8 +50,6 @@ app.use("/api/v1/notification", notificationRoute);
 app.use("/api/v1/watchlist", watchListRoute);
 app.use(errorHandler);
 
-const joinedUsers: any = {};
-
 io.on("connection", (socket) => {
   console.log("socket connected", socket.id);
 

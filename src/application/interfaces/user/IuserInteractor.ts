@@ -6,6 +6,7 @@ export interface IUserInteractor {
   adminLogin(email: string, password: string): Promise<User | null>;
   updateDetails(id: string, value: User): Promise<User>;
   verifyMail(type: string, token: string, email: string): Promise<User | null>;
+  resendMail(id: string): any;
   forgotPassword(email: string): Promise<void>;
   updatePassword(email: string, password: string): Promise<User | null>;
   googleSignUp(user: User): Promise<User | null>;

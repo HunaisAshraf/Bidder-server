@@ -35,6 +35,11 @@ router.post(
 );
 router.post("/google-signup", controller.onGoogleSignUp.bind(controller));
 router.post("/verify-email", controller.onVerifyAccount.bind(controller));
+router.get(
+  "/resend-email",
+  isAuthenticated,
+  controller.onResendEmail.bind(controller)
+);
 router.post("/forgotpassword", controller.onForgotPassword.bind(controller));
 router.put(
   "/update-user",

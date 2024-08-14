@@ -131,15 +131,37 @@ export class UserController {
       const data = await this.interactor.verifyMail(type, token, email);
 
       if (data) {
+        const user = {
+          ...JSON.parse(JSON.stringify(data)),
+          password: undefined,
+        };
         res
           .status(200)
-          .json({ success: true, message: "account verified", data });
+          .json({ success: true, message: "account verified", user });
       }
     } catch (error) {
       next(error);
     }
   }
 
+  async onResendEmail(
+    req: IRequestWithUser,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const { id } = req.user!;
+      const data = await this.interactor.resendMail(id);
+
+      if (data) {
+        res.status(200).json({ success: true, message: "mail successfull" });
+      }
+    } catch (error) {
+      console.log(error);
+
+      next(error);
+    }
+  }
   async onForgotPassword(req: Request, res: Response, next: NextFunction) {
     try {
       const { email } = req.body;

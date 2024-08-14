@@ -357,4 +357,17 @@ export class UserInteractor implements IUserInteractor {
       throw new ErrorResponse(error.message, error.status);
     }
   }
+
+  async resendMail(id: string) {
+    try {
+      const user = await this.repository.findOne(id);
+      if (user) {
+        await this.mailService.accountVerificationMail(user, "verifyEmail");
+
+        return true;
+      }
+    } catch (error: any) {
+      throw new ErrorResponse(error.message, error.status);
+    }
+  }
 }
